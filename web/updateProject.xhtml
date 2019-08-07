@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>Update Project</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkLogin()}" />
+    </f:metadata>
+    <body class="body">
+        <f:view>
+            <h:form>
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+                <b>Project name:</b> #{app.currentProject.projectName}<br/><br/>
+                <b>Project location:</b> #{app.currentProject.location}<br/><br/>
+                <b>Start date:</b> #{app.currentProject.startDate}<br/><br/>
+                <b>End date:</b> #{app.currentProject.finishDate}<br/><br/>
+                <b>Client:</b> #{app.currentProject.clientId.clientName}<br/><br/>
+                <b>Project stage: </b>
+                <h:selectOneMenu value="#{app.selectedStage}">
+                    <f:selectItems value="#{app.stages}"/>
+                </h:selectOneMenu><br/><br/>
+                <b>Percentage completed: </b><h:inputText value="#{app.completed}" converterMessage="Please enter a number!">
+                    <f:convertNumber integerOnly="true" type="number" />
+                </h:inputText>
+                <br/><br/>          
+
+                <h:commandButton style="width:160px" value="Save changes" action="#{app.updateProject()}"/><br/><br/>
+                <h:commandButton style="width:160px" value="Add/remove materials" action="addMaterial.xhtml" immediate="true"/><br/><br/>
+                <h:commandButton style="width:160px" value="Go back" action="viewProject.xhtml" immediate="true"/><br/><br/>
+                <h:outputLabel value="#{app.message}" rendered="#{app.message eq 'Invalid entry, please try again'}" style="color: red"/>
+            </h:form>
+        </f:view>
+    </body>
+</html>

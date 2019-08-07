@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Progress Summary</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <script src="libraries/jquery-3.3.1.js"/>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load("current", {packages: ["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+            var chart;
+            var data;
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(#{app.barData});
+                var options = {
+                    title: 'Project Stages Progress',
+                };
+
+                chart = new google.visualization.BarChart(document.getElementById('piechart_3d'));
+                chart.draw(data, options);
+            }
+        </script>
+    </h:head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkLogin()}" />
+    </f:metadata>
+    <h:body>
+        <f:view>
+            <h:form class="body">
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+                <div align="center">
+                    <div id="piechart_3d" style="width: 900px; height: 500px;" ></div>
+                </div>
+                <h:commandButton style="width:200px" value="Go back" action="viewProject.xhtml"/>
+            </h:form>
+        </f:view>
+    </h:body>
+</html>

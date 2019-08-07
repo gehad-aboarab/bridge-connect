@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>Select Project</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkLogin()}" />
+    </f:metadata>
+    <body>
+        <f:view>
+            <h:form class="body">
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+                Select a project:
+                <h:selectOneMenu style="width:160px" value="#{app.selectedProject}">
+                    <f:selectItems value="#{app.projects}"/>
+                </h:selectOneMenu><br/><br/>
+
+                <h:commandButton style="width:160px" value="View project" action="viewProject.xhtml" /> <br/><br/>
+                <h:commandButton style="width:160px" value="Update project" action="updateProject.xhtml"/>
+            </h:form>
+        </f:view>
+
+    </body>
+</html>

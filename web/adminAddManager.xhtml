@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Add Manager</title>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </h:head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkAdminLogin()}" />
+    </f:metadata>
+    <h:body>
+        <f:view>
+            <h:form class="body">
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+                <p><b>First Name: </b><h:inputText style="width:200px" value="#{app.adminManagerFN}" validatorMessage="Please enter a valid name">
+                        <f:validateRegex pattern="[a-zA-Z]+"/>
+                    </h:inputText>
+                </p>
+                <p><b>Last Name: </b><h:inputText style="width:200px" value="#{app.adminManagerLN}" validatorMessage="Please enter a valid name">
+                        <f:validateRegex pattern="[a-zA-Z]+"/>
+                    </h:inputText>
+                </p>
+                <p><b>Address: </b><h:inputText style="width:200px" value="#{app.adminManagerAddress}"/></p>
+                <p><b>Email: </b>
+                    <h:inputText style="width:200px" value="#{app.adminManagerEmail}" validatorMessage="Please enter a valid email address">
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                    </h:inputText></p>
+                <p><b>Password: </b><h:inputSecret style="width:200px" value="#{app.adminManagerPassword}"/></p>
+                <p><b>Projects: </b><h:selectManyMenu value="#{app.adminManagerProjects}">
+                        <f:selectItems value="#{app.projects}"/>
+                    </h:selectManyMenu></p>
+                <h:commandButton style="width:270px" value="Create new manager" action="#{app.addManager}"/><br/><br/>
+                <h:commandButton style="width:270px" value="Go back" action="adminCrud.xhtml" immediate="true">
+                    <f:ajax />
+                </h:commandButton>
+            </h:form>
+        </f:view>
+
+    </h:body>
+</html>
+

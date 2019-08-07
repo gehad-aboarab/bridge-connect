@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>View Project Information</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkLogin()}" />
+    </f:metadata>
+    <body class="body">
+        <f:view>
+            <h:form>
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+                <b>Project name:</b> #{app.currentProject.projectName}<br/><br/>
+                <b>Project location:</b> #{app.currentProject.location}<br/><br/>
+                <b>Start date:</b> #{app.currentProject.startDate}<br/><br/>
+                <b>End date:</b> #{app.currentProject.finishDate} <br/><br/>
+                <b>Client:</b> #{app.currentProject.clientId.clientName}<br/><br/>
+                <b>Current stages of the project:</b> <br/>
+                <div align="center">
+                    <h:dataTable value="#{app.currentPlans}" var="i" rowClasses="one,two">
+                        <h:column class="cols">
+                            <f:facet name="header">Stage</f:facet>
+                            <h:outputText value="#{i.stages.stageName}"/>
+                        </h:column>
+                        <h:column class="cols">
+                            <f:facet name="header">Completed</f:facet>
+                            <h:outputText value="#{i.completed}"/>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+                <br/><br/>
+                <b>Materials purchased:</b> <br/>
+                <div align="center">
+                    <h:dataTable value="#{app.currentProject.projectMaterialsCollection}" var="item" rowClasses="one,two">
+                        <h:column class="cols">
+                            <f:facet name="header">Material</f:facet>
+                            <h:outputText value="#{item.materials.materialName}"/>
+                        </h:column>
+                        <h:column class="cols">
+                            <f:facet name="header">Supplier</f:facet>
+                            <h:outputText value="#{item.materials.supplierId.supplierName}"/>
+                        </h:column>
+                        <h:column class="cols">
+                            <f:facet name="header">Quantity</f:facet>
+                            <h:outputText value="#{item.quantity}"/>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+                <br/><br/>
+                <h:commandButton style="width:200px" value="View progress summary" action="summary.xhtml"/><br/><br/>
+                <h:commandButton style="width:200px" value="Update project" action="updateProject.xhtml"/><br/><br/>
+                <h:commandButton style="width:200px" value="Go back" action="listProjects.xhtml"/>
+            </h:form>
+        </f:view>
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>Add/Remove Materials</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <f:metadata>
+        <f:viewAction
+            action="#{app.checkAdminLogin()}" />
+    </f:metadata>
+    <body class="body">
+        <f:view>
+            <h:form>
+                <h1>
+                    <p class="title">Welcome to Bridge Connect</p>
+                    <p class="moto">Manage your projects remotely</p>
+                </h1>
+                <div align="right">
+                    <h:commandLink value="Log out" action="#{app.logout}"/>
+                </div>
+
+                <b>Add material:  </b>
+                <h:selectOneMenu style="width:160px" value="#{app.selectedMaterial}">
+                    <f:selectItems value="#{app.materials}"/>
+                </h:selectOneMenu><br/><br/>
+                <b>Quantity: </b><h:inputText value="#{app.materialQuantity}" converterMessage="Please enter a number!">
+                    <f:convertNumber integerOnly="true" type="number" />
+                    </h:inputText>
+                    <div align="center">
+                        <h:dataTable value="#{app.currentProject.projectMaterialsCollection}" var="item" rowClasses="one,two">
+                            <h:column>
+                                <f:facet name="header">Material</f:facet>
+                                <h:outputText value="#{item.materials.materialName}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Supplier</f:facet>
+                                <h:outputText value="#{item.materials.supplierId.supplierName}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Quantity</f:facet>
+                                <h:outputText value="#{item.quantity}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Select</f:facet>
+                                <h:selectBooleanCheckbox value="#{app.selectMap[item.materials.materialId]}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </div>
+                    <br/><br/>
+                    <h:commandButton style="width:150px" value="Add" action="#{app.addMaterial()}"/>  
+                    <h:commandButton style="width:150px" value="Remove" action="#{app.removeMaterial()}"/>
+                    <br/><br/>
+                    <h:commandButton style="width:150px" value="Go back" action="viewProject.xhtml" immediate="true"/>
+            </h:form>
+        </f:view>
+    </body>
+</html>
