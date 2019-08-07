@@ -1,0 +1,192 @@
+drop table stages_dependency;
+drop table plans;
+drop table stages;
+drop table manages;
+drop table managers;
+drop table project_materials;
+drop table materials;
+drop table suppliers;
+drop table projects;
+drop table clients;
+
+create table CLIENTS(
+    client_ID int primary key generated always as identity,
+    client_name varchar (100) NOT NULL
+);
+create table PROJECTS(
+    project_ID int primary key generated always as identity,
+    project_name varchar (100) NOT NULL,
+    location varchar (100) NOT NULL,
+    client_ID int NOT NULL,
+    start_date date NOT NULL,
+    finish_date date NOT NULL,
+    CONSTRAINT projects_client_id_fk FOREIGN KEY (client_ID) REFERENCES CLIENTS (client_ID)
+);
+create table MANAGERS(
+    manager_ID int primary key generated always as identity,
+    first_name varchar (100) NOT NULL,
+    last_name varchar (100) NOT NULL,
+    address varchar (100) NOT NULL,
+    email varchar (100) NOT NULL,
+    password varchar (100) NOT NULL
+);
+create table MANAGES(
+    manager_ID int NOT NULL,
+    project_ID int NOT NULL,
+    CONSTRAINT manages_pk PRIMARY KEY (manager_ID,project_ID),
+    CONSTRAINT manages_manager_id_fk FOREIGN KEY (manager_ID) REFERENCES MANAGERS(manager_ID),
+    CONSTRAINT manages_project_id_fk FOREIGN KEY (project_ID) REFERENCES PROJECTS(project_ID)
+);
+create table SUPPLIERS(
+    supplier_ID int primary key generated always as identity,
+    supplier_name varchar (100) NOT NULL
+);
+create table MATERIALS(
+    material_ID int primary key generated always as identity,
+    material_name varchar (100) NOT NULL,
+    supplier_ID int NOT NULL,
+    price double NOT NULL,
+    CONSTRAINT materials_supplier_id_fk FOREIGN KEY (supplier_ID) REFERENCES SUPPLIERS(supplier_ID)
+);
+create table PROJECT_MATERIALS(
+    project_ID int NOT NULL,
+    material_ID int NOT NULL,
+    quantity int NOT NULL,
+    total_cost double NOT NULL,
+    CONSTRAINT project_materials_pk PRIMARY KEY (project_ID, material_ID),
+    CONSTRAINT project_materials_project_id_fk FOREIGN KEY (project_ID) REFERENCES PROJECTS(project_ID),
+    CONSTRAINT project_materials_material_id_fk FOREIGN KEY (material_ID) REFERENCES MATERIALS(material_ID)
+);
+create table STAGES(
+    stage_ID int primary key generated always as identity,
+    stage_name varchar (100) NOT NULL
+);
+create table STAGES_DEPENDENCY(
+    dependee_ID int NOT NULL,
+    dependent_ID int NOT NULL,
+    CONSTRAINT stages_dependency_pk PRIMARY KEY (dependee_ID, dependent_ID),
+    CONSTRAINT stages_dependency_dependee_fk FOREIGN KEY (dependee_ID) REFERENCES STAGES(stage_ID),
+    CONSTRAINT stages_dependency_dependent_fk FOREIGN KEY (dependent_ID) REFERENCES STAGES(stage_ID)
+);
+create table PLANS(
+    stage_ID int NOT NULL,
+    project_ID int NOT NULL,
+    completed int NOT NULL,
+    CONSTRAINT plans_pk PRIMARY KEY (stage_ID,project_ID),
+    CONSTRAINT plans_stage_id_fk FOREIGN KEY (stage_ID) REFERENCES STAGES(stage_ID),
+    CONSTRAINT plans_project_id_fk FOREIGN KEY (project_ID) REFERENCES PROJECTS(project_ID)
+);
+
+insert into clients(client_name) values ('Emaar');
+insert into clients(client_name) values ('Turner');
+
+insert into projects(project_name,location,client_ID,start_date,finish_date)
+    values('SkyView','Dubai',1,'2016-12-15','2018-12-15');
+insert into projects(project_name,location,client_ID,start_date,finish_date)
+    values('City Center','Sharjah',2,'2018-12-15','2020-12-15');
+insert into projects(project_name,location,client_ID,start_date,finish_date)
+    values('Ajman University','Ajman',2,'2016-12-15','2017-12-15');
+insert into projects(project_name,location,client_ID,start_date,finish_date)
+    values('Address Hotel','Abu Dhabi',1,'2017-12-15','2019-12-15');
+
+insert into suppliers(supplier_name) values ('CEMEX');
+insert into suppliers(supplier_name) values ('Nazo');
+insert into suppliers(supplier_name) values ('Chabros');
+
+insert into materials(material_name, supplier_ID, price) values ('Concrete',1,3500.00);
+insert into materials(material_name, supplier_ID, price) values ('Wood',2,1000.00);
+insert into materials(material_name, supplier_ID, price) values ('Ceramic',3,2310.50);
+
+insert into project_materials(material_ID, project_ID, quantity, total_cost) 
+    values (1,1,3,3*(select price from materials where material_ID=1));
+insert into project_materials(material_ID, project_ID, quantity, total_cost) 
+    values (2,1,5,5*(select price from materials where material_ID=2));
+insert into project_materials(material_ID, project_ID, quantity, total_cost) 
+    values (2,2,100,100*(select price from materials where material_ID=2));
+insert into project_materials(material_ID, project_ID, quantity, total_cost) 
+    values (3,3,150,150*(select price from materials where material_ID=3));
+
+insert into stages(stage_name) values ('Site Work'); 
+insert into stages(stage_name) values ('Concrete Work');
+insert into stages(stage_name) values ('Water Proofing');
+insert into stages(stage_name) values ('Block Work');
+insert into stages(stage_name) values ('Metal Work');
+insert into stages(stage_name) values ('Joinery Work');
+insert into stages(stage_name) values ('Finishing Work');
+insert into stages(stage_name) values ('External Work');
+
+insert into stages_dependency(dependee_ID, dependent_ID) values (1,2);
+insert into stages_dependency(dependee_ID, dependent_ID) values (1,3);
+insert into stages_dependency(dependee_ID, dependent_ID) values (2,4);
+insert into stages_dependency(dependee_ID, dependent_ID) values (2,5);
+insert into stages_dependency(dependee_ID, dependent_ID) values (3,4);
+insert into stages_dependency(dependee_ID, dependent_ID) values (3,5);
+insert into stages_dependency(dependee_ID, dependent_ID) values (4,6);
+insert into stages_dependency(dependee_ID, dependent_ID) values (5,6);
+insert into stages_dependency(dependee_ID, dependent_ID) values (6,7);
+insert into stages_dependency(dependee_ID, dependent_ID) values (7,8);
+
+insert into plans(project_ID, stage_ID, completed)
+    values (1,1,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,2,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,3,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,4,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,5,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,6,20);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,7,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (1,8,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,1,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,2,10);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,3,5);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,4,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,5,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,6,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,7,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (2,8,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,1,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,2,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,3,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,4,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,5,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,6,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,7,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (3,8,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,1,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,2,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,3,100);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,4,50);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,5,30);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,6,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,7,0);
+insert into plans(project_ID, stage_ID, completed)
+    values (4,8,0);
